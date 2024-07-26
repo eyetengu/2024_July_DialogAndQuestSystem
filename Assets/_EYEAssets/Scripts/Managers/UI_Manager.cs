@@ -6,10 +6,12 @@ using UnityEngine;
 public class UI_Manager : MonoBehaviour
 {
     [SerializeField] private TMP_Text _text;
-    [SerializeField] private GameObject _introPanel;
-    [SerializeField] private GameObject _overlayPanel;
+    [SerializeField] private TMP_Text _playerMessageText;
     [SerializeField] private TMP_Text _gameCondition;
     [SerializeField] private TMP_Text _extraText;
+
+    [SerializeField] private GameObject _introPanel;
+    [SerializeField] private GameObject _overlayPanel;
 
 
     private void OnEnable()
@@ -33,6 +35,13 @@ public class UI_Manager : MonoBehaviour
             _text.text = "Day: " + dayOfYear + "\nTime: 0" + state + ":00\nState: " + message;
         else
             _text.text = "Day: " + dayOfYear + "\nTime: " + state + ":00\nState: " + message;
+    }
+
+    public void DisplayPlayerMessage(string message)
+    {
+        StopCoroutine(ClearPlayerMessage());
+        _playerMessageText.text = message;
+        StartCoroutine(ClearPlayerMessage());
     }
 
     public void UpdateEndGameMessage(string message)
@@ -74,5 +83,11 @@ public class UI_Manager : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         _extraText.text = "";
+    }
+
+    IEnumerator ClearPlayerMessage()
+    {
+        yield return new WaitForSeconds(3);
+        _playerMessageText.text = "";
     }
 }

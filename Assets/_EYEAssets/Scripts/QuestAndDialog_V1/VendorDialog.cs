@@ -6,6 +6,7 @@ public class VendorDialog : MonoBehaviour
 {
     QuestPlayer_V1 _playerInventory;
     [SerializeField] Quest_Manager _questManager;
+    [SerializeField] UI_Manager _UIManager;
 
     MeshRenderer _vendorRenderer;
     [SerializeField] Material _completedQuestColor;
@@ -15,6 +16,7 @@ public class VendorDialog : MonoBehaviour
     [SerializeField] private string _rewardName;    
     [SerializeField] private List<string> _questObjectives;    
     [SerializeField] private GameObject _rewardObject;
+    string _message;
 
     int itemsCollected;
 
@@ -34,6 +36,7 @@ public class VendorDialog : MonoBehaviour
     private void Start()
     {
         _vendorRenderer = GetComponent<MeshRenderer>();
+        _UIManager = GameObject.FindObjectOfType<UI_Manager>().GetComponent<UI_Manager>();
     }
 
     void Update()
@@ -52,9 +55,12 @@ public class VendorDialog : MonoBehaviour
                             foreach(var item in _questObjectives)
                             {
                                 requestItems += item.ToString() + ", ";
-                            }   
+                            }
 
+                            _message = _informationDialog + requestItems;
+                            _UIManager.DisplayPlayerMessage(_message);
                             Debug.Log(_informationDialog + requestItems);
+
                             _questExplained = true;
                         }
                         else if (_questExplained)
@@ -62,8 +68,10 @@ public class VendorDialog : MonoBehaviour
                             _questExplained = true;
                             _questAccepted = true;
                             _questManager.AddActiveQuest(_questName);
-                            //_playerInventory._playerInventory = _questObjectives;
                             _playerInventory._acceptedQuests.Add(_questName);
+
+                            _message = _acceptDialog;
+                            _UIManager.DisplayPlayerMessage(_message);
                             Debug.Log(_acceptDialog);
                         }
                     }
@@ -86,7 +94,11 @@ public class VendorDialog : MonoBehaviour
                                         _questManager.AddCompletedQuest(_questName);
 
                                         _playerInventory._acceptedQuests.Remove(_questName);
+
+                                        _message = _questCompleteDialog + " " + _rewardName + " I promised";
+                                        _UIManager.DisplayPlayerMessage(_message);
                                         Debug.Log(_questCompleteDialog);
+
                                         _finalDialogFinished = true;
                                         _playerInventory._playerInventory.Add(_rewardName);
                                         _vendorRenderer.material = _completedQuestColor;
@@ -110,6 +122,8 @@ public class VendorDialog : MonoBehaviour
             _inZone = true;
             if(_questAccepted == false)
             {
+                _message = _introDialog;
+                _UIManager.DisplayPlayerMessage(_message);
                 Debug.Log(_introDialog);
             }
         }

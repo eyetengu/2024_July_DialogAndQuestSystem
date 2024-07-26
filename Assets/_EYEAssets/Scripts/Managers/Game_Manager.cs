@@ -17,9 +17,6 @@ public class Game_Manager : MonoBehaviour
     public static event WinCondition win;
 
 
-
-
-
     //BUILT-IN FUNCTIONS
     void Start()
     {
